@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { useMutation, useQuery } from 'convex/react';
+import { Authenticated, Unauthenticated, useMutation, useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
-import { useAuth } from '@workos-inc/authkit-tanstack-react-start/client';
-import { getAuth, getSignInUrl } from '@workos-inc/authkit-tanstack-react-start';
-import type { User } from '@workos-inc/authkit-tanstack-react-start';
+import { useAuth } from '@workos/authkit-tanstack-react-start/client';
+import { getAuth, getSignInUrl, type User } from '@workos/authkit-tanstack-react-start';
+import { useState, useEffect } from 'react';
 
 export const Route = createFileRoute('/')({
   component: Home,
@@ -16,8 +16,22 @@ export const Route = createFileRoute('/')({
 });
 
 function Home() {
-  const { user, loading } = useAuth();
   const { signInUrl, signUpUrl } = Route.useLoaderData();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return null;
+  }
+
+  return <HomeContent signInUrl={signInUrl} signUpUrl={signUpUrl} />;
+}
+
+function HomeContent({ signInUrl, signUpUrl }: { signInUrl: string; signUpUrl: string }) {
+  const { user } = useAuth();
 
   return (
     <>
@@ -27,13 +41,12 @@ function Home() {
       </header>
       <main className="p-8 flex flex-col gap-8">
         <h1 className="text-4xl font-bold text-center">Convex + TanStack Start + WorkOS</h1>
-        {loading ? (
-          <div className="mx-auto">Loading...</div>
-        ) : user ? (
+        <Authenticated>
           <Content />
-        ) : (
+        </Authenticated>
+        <Unauthenticated>
           <SignInForm signInUrl={signInUrl} signUpUrl={signUpUrl} />
-        )}
+        </Unauthenticated>
       </main>
     </>
   );

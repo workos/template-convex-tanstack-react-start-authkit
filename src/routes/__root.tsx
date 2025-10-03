@@ -1,6 +1,5 @@
 import { HeadContent, Outlet, Scripts, createRootRoute } from '@tanstack/react-router';
 import appCssUrl from '../app.css?url';
-import { AuthKitProvider } from '@workos-inc/authkit-tanstack-react-start/client';
 import { ConvexClientProvider } from '../components/ConvexClientProvider';
 import type { ReactNode } from 'react';
 
@@ -30,11 +29,9 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <RootDocument>
-      <AuthKitProvider>
-        <ConvexClientProvider>
-          <Outlet />
-        </ConvexClientProvider>
-      </AuthKitProvider>
+      <ConvexClientProvider>
+        <Outlet />
+      </ConvexClientProvider>
     </RootDocument>
   );
 }

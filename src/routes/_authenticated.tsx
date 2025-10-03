@@ -1,5 +1,5 @@
 import { redirect, createFileRoute, Outlet } from '@tanstack/react-router';
-import { getAuth, getSignInUrl } from '@workos-inc/authkit-tanstack-react-start';
+import { getAuth, getSignInUrl } from '@workos/authkit-tanstack-react-start';
 
 export const Route = createFileRoute('/_authenticated')({
   loader: async ({ location }) => {

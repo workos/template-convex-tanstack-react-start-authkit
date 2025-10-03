@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { api } from '../../../convex/_generated/api';
-import { getAuth } from '@workos-inc/authkit-tanstack-react-start';
+import { getAuth } from '@workos/authkit-tanstack-react-start';
 import { useMutation, usePreloadedQuery } from 'convex/react';
 import { preloadQuery } from 'convex/nextjs';
 

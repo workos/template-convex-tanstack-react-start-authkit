@@ -24,7 +24,7 @@
   "dependencies": {
     "@tanstack/react-router": "^1.132.33",
     "@tanstack/react-start": "^1.132.34",
-    "@workos-inc/authkit-tanstack-react-start": "file:../authkit-tanstack-start",
+    "@workos/authkit-tanstack-react-start": "file:../authkit-tanstack-start",
     "convex": "^1.27.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
