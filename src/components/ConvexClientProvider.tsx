@@ -1,20 +1,27 @@
-'use client';
-
-import { ReactNode, useCallback, useState } from 'react';
-import { ConvexReactClient } from 'convex/react';
+import { ReactNode, useCallback, useState, useEffect } from 'react';
+import { ConvexReactClient, ConvexProvider } from 'convex/react';
 import { ConvexProviderWithAuth } from 'convex/react';
-import { AuthKitProvider, useAuth, useAccessToken } from '@workos-inc/authkit-nextjs/components';
+import { useAuth, useAccessToken } from '@workos-inc/authkit-tanstack-react-start/client';
 
 export function ConvexClientProvider({ children }: { children: ReactNode }) {
   const [convex] = useState(() => {
-    return new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+    return new ConvexReactClient(import.meta.env.VITE_CONVEX_URL!);
   });
+
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return <ConvexProvider client={convex}>{children}</ConvexProvider>;
+  }
+
   return (
-    <AuthKitProvider>
-      <ConvexProviderWithAuth client={convex} useAuth={useAuthFromAuthKit}>
-        {children}
-      </ConvexProviderWithAuth>
-    </AuthKitProvider>
+    <ConvexProviderWithAuth client={convex} useAuth={useAuthFromAuthKit}>
+      {children}
+    </ConvexProviderWithAuth>
   );
 }
 

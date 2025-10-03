@@ -1,41 +1,52 @@
-'use client';
+import { createFileRoute, Link } from '@tanstack/react-router';
+import { useMutation, useQuery } from 'convex/react';
+import { api } from '../../convex/_generated/api';
+import { useAuth } from '@workos-inc/authkit-tanstack-react-start/client';
+import { getAuth, getSignInUrl } from '@workos-inc/authkit-tanstack-react-start';
+import type { User } from '@workos-inc/authkit-tanstack-react-start';
 
-import { Authenticated, Unauthenticated, useMutation, useQuery } from 'convex/react';
-import { api } from '../convex/_generated/api';
-import Link from 'next/link';
-import { useAuth } from '@workos-inc/authkit-nextjs/components';
-import type { User } from '@workos-inc/node';
+export const Route = createFileRoute('/')({
+  component: Home,
+  loader: async () => {
+    const { user } = await getAuth();
+    const signInUrl = await getSignInUrl();
+    const signUpUrl = await getSignInUrl({ screenHint: 'sign-up' });
+    return { user, signInUrl, signUpUrl };
+  },
+});
 
-export default function Home() {
-  const { user, signOut } = useAuth();
+function Home() {
+  const { user, loading } = useAuth();
+  const { signInUrl, signUpUrl } = Route.useLoaderData();
 
   return (
     <>
       <header className="sticky top-0 z-10 bg-background p-4 border-b-2 border-slate-200 dark:border-slate-800 flex flex-row justify-between items-center">
-        Convex + Next.js + WorkOS
-        {user && <UserMenu user={user} onSignOut={signOut} />}
+        Convex + TanStack Start + WorkOS
+        {user && <UserMenu user={user} />}
       </header>
       <main className="p-8 flex flex-col gap-8">
-        <h1 className="text-4xl font-bold text-center">Convex + Next.js + WorkOS</h1>
-        <Authenticated>
+        <h1 className="text-4xl font-bold text-center">Convex + TanStack Start + WorkOS</h1>
+        {loading ? (
+          <div className="mx-auto">Loading...</div>
+        ) : user ? (
           <Content />
-        </Authenticated>
-        <Unauthenticated>
-          <SignInForm />
-        </Unauthenticated>
+        ) : (
+          <SignInForm signInUrl={signInUrl} signUpUrl={signUpUrl} />
+        )}
       </main>
     </>
   );
 }
 
-function SignInForm() {
+function SignInForm({ signInUrl, signUpUrl }: { signInUrl: string; signUpUrl: string }) {
   return (
     <div className="flex flex-col gap-8 w-96 mx-auto">
       <p>Log in to see the numbers</p>
-      <a href="/sign-in">
+      <a href={signInUrl}>
         <button className="bg-foreground text-background px-4 py-2 rounded-md">Sign in</button>
       </a>
-      <a href="/sign-up">
+      <a href={signUpUrl}>
         <button className="bg-foreground text-background px-4 py-2 rounded-md">Sign up</button>
       </a>
     </div>
@@ -81,16 +92,16 @@ function Content() {
       <p>
         Edit{' '}
         <code className="text-sm font-bold font-mono bg-slate-200 dark:bg-slate-800 px-1 py-0.5 rounded-md">
-          app/page.tsx
+          src/routes/index.tsx
         </code>{' '}
         to change your frontend
       </p>
       <p>
         See the{' '}
-        <Link href="/server" className="underline hover:no-underline">
+        <Link to="/server" className="underline hover:no-underline">
           /server route
         </Link>{' '}
-        for an example of loading data in a server component
+        for an example of loading data in a server loader
       </p>
       <div className="flex flex-col">
         <p className="text-lg font-bold">Useful resources:</p>
@@ -103,9 +114,8 @@ function Content() {
             />
             <ResourceCard
               title="Stack articles"
-              description="Learn about best practices, use cases, and more from a growing
-            collection of articles, videos, and walkthroughs."
-              href="https://www.typescriptlang.org/docs/handbook/2/basic-types.html"
+              description="Learn about best practices, use cases, and more from a growing collection of articles, videos, and walkthroughs."
+              href="https://stack.convex.dev"
             />
           </div>
           <div className="flex flex-col gap-2 w-1/2">
@@ -116,8 +126,7 @@ function Content() {
             />
             <ResourceCard
               title="Discord"
-              description="Join our developer community to ask questions, trade tips & tricks,
-            and show off your projects."
+              description="Join our developer community to ask questions, trade tips & tricks, and show off your projects."
               href="https://www.convex.dev/community"
             />
           </div>
@@ -138,11 +147,13 @@ function ResourceCard({ title, description, href }: { title: string; description
   );
 }
 
-function UserMenu({ user, onSignOut }: { user: User; onSignOut: () => void }) {
+function UserMenu({ user }: { user: User }) {
+  const { signOut } = useAuth();
+
   return (
     <div className="flex items-center gap-2">
       <span className="text-sm">{user.email}</span>
-      <button onClick={onSignOut} className="bg-red-500 text-white px-3 py-1 rounded-md text-sm hover:bg-red-600">
+      <button onClick={() => signOut()} className="bg-red-500 text-white px-3 py-1 rounded-md text-sm hover:bg-red-600">
         Sign out
       </button>
     </div>
