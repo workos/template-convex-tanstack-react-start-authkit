@@ -1,12 +1,12 @@
-# Welcome to your Convex + Next.js + WorkOS AuthKit app
+# Welcome to your Convex + TanStack Start + WorkOS AuthKit app
 
-This is a [Convex](https://convex.dev/) project migrated to use WorkOS AuthKit for authentication.
+This is a [Convex](https://convex.dev/) project using WorkOS AuthKit for authentication.
 
 After the initial setup (<2 minutes) you'll have a working full-stack app using:
 
 - Convex as your backend (database, server logic)
 - [React](https://react.dev/) as your frontend (web page interactivity)
-- [Next.js](https://nextjs.org/) for optimized web hosting and page routing
+- [TanStack Start](https://tanstack.com/start) for modern full-stack React with file-based routing
 - [Tailwind](https://tailwindcss.com/) for building great looking accessible UI
 - [WorkOS AuthKit](https://authkit.com/) for authentication
 
@@ -19,13 +19,15 @@ After the initial setup (<2 minutes) you'll have a working full-stack app using:
    ```
 
 2. Set up your environment variables:
+
    ```bash
    cp .env.local.example .env.local
    ```
+
 3. Configure WorkOS AuthKit:
    - Create a [WorkOS account](https://workos.com/)
    - Get your Client ID and API Key from the WorkOS dashboard
-   - In the WorkOS dashboard, add `http://localhost:3000/callback` as a redirect URI
+   - In the WorkOS dashboard, add `http://localhost:3000/api/auth/callback` as a redirect URI
    - Generate a secure password for cookie encryption (minimum 32 characters)
    - Update your `.env.local` file with these values
 
@@ -40,13 +42,13 @@ After the initial setup (<2 minutes) you'll have a working full-stack app using:
    - Add your Convex URL to `.env.local`
    - Open the Convex dashboard
 
-   Then configure WorkOS authentication in Convex:
+   Then set your WorkOS Client ID in Convex:
 
    ```bash
-   npx convex auth add workos
+   npx convex env set WORKOS_CLIENT_ID <your_client_id>
    ```
 
-   This creates `convex/auth.config.ts` with WorkOS integration
+   This allows Convex to validate JWT tokens from WorkOS
 
 5. Run the development server:
 
@@ -54,7 +56,7 @@ After the initial setup (<2 minutes) you'll have a working full-stack app using:
    npm run dev
    ```
 
-   This starts both the Next.js frontend and Convex backend in parallel
+   This starts both the Vite dev server (TanStack Start frontend) and Convex backend in parallel
 
 6. Open [http://localhost:3000](http://localhost:3000) to see your app
 
@@ -64,8 +66,8 @@ This app uses WorkOS AuthKit for authentication. Key features:
 
 - **Redirect-based authentication**: Users are redirected to WorkOS for sign-in/sign-up
 - **Session management**: Automatic token refresh and session handling
-- **Middleware protection**: Routes are protected using Next.js middleware
-- **Client and server hooks**: `useAuth()` for client components, `withAuth()` for server components
+- **Route loader protection**: Protected routes use loaders to check authentication
+- **Client and server functions**: `useAuth()` for client components, `getAuth()` for server loaders
 
 ## Learn more
 
