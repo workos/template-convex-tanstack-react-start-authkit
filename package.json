@@ -22,16 +22,16 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "@tanstack/react-router": "^1.132.33",
-    "@tanstack/react-start": "^1.132.34",
-    "@workos/authkit-tanstack-react-start": "file:../authkit-tanstack-start",
+    "@tanstack/react-router": "^1.132.41",
+    "@tanstack/react-start": "^1.132.43",
+    "@workos/authkit-tanstack-react-start": "0.1.0",
     "convex": "^1.27.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@tanstack/react-router-devtools": "^1.132.33",
+    "@tanstack/react-router-devtools": "^1.132.41",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
